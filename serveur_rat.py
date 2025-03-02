@@ -1,20 +1,32 @@
 import socket
-s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-h=""
-p=443
-s.bind((h,p))
-s.listen()
-print("En ecoute")
-conn,addr=s.accept()
-print("Connecté avec {} comme IP au port {}".format(addr[0],addr[1]))
+import os
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+h="192.168.1.5"
+p=4444
+e="utf-8"
+s.connect((h,p))
+print("Client connecté")
 while True:
-    command = input("Entrez votre commande: ").encode("utf-8")
-    conn.sendall(command)
-    if not command:
-        continue
-    rec = conn.recv(4096).decode("utf-8",errors='ignore')
-    print(rec)
-
-                
-conn.close()
+    com=s.recv(1024).decode(e).strip()
+    if com == "down":
+        name = s.recv(1024).decode(e).strip()
+        size= os.path.getsize(name)
+        
+        with open(name,"rb") as file:
+            c=0
+            s.sendall(str(size).encode(e))
+            while c < size:
+                data=file.read()
+                s.sendall(data)
+                c+=len(data)
+    if com == "upl":
+        size = int(s.recv(1024).decode(e).strip())
+        reg=s.recv(1024).decode(e).strip()
+        
+        with open(reg,"wb") as file:
+            c=0
+            while c < size:
+                data = s.recv(1024)
+                file.write(data)
+                c+=len(data)
 s.close()
